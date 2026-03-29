@@ -18,10 +18,13 @@ body {
     background-color: var(--background-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
+    padding: 60px 20px 40px;
+    box-sizing: border-box;
     background-image: linear-gradient(45deg, var(--bg-pattern-color) 25%, transparent 25%),
                       linear-gradient(-45deg, var(--bg-pattern-color) 25%, transparent 25%),
                       linear-gradient(45deg, transparent 75%, var(--bg-pattern-color) 75%),
@@ -91,8 +94,9 @@ h1 {
 .contact-container {
     background-color: var(--container-bg);
     color: var(--text-color);
+    width: 100%;
     max-width: 500px;
-    margin: 40px auto;
+    margin-top: 40px;
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.15);
