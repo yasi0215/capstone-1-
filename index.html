@@ -7,14 +7,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button id="theme-toggle">🌙 Dark Mode</button>
+    <nav class="navbar">
+        <span class="nav-logo">🎱 LottoGen</span>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link active">홈</a>
+            <a href="contact.html" class="nav-link">제휴 문의</a>
+        </div>
+        <button id="theme-toggle">🌙 Dark Mode</button>
+    </nav>
+
     <div class="container">
         <h1>Lotto Number Generator</h1>
         <button id="generate-btn">Generate Numbers</button>
         <div id="numbers-container"></div>
     </div>
-
-    <a href="contact.html" class="contact-link">제휴 문의</a>
 
     <script src="main.js"></script>
 </body>

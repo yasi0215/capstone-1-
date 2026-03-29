@@ -7,9 +7,16 @@
     <link rel="stylesheet" href="contact.css">
 </head>
 <body>
-    <button id="theme-toggle">🌙 Dark Mode</button>
+    <nav class="navbar">
+        <span class="nav-logo">🎱 LottoGen</span>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">홈</a>
+            <a href="contact.html" class="nav-link active">제휴 문의</a>
+        </div>
+        <button id="theme-toggle">🌙 Dark Mode</button>
+    </nav>
+
     <div class="contact-container">
-        <a href="index.html" class="back-link">← 돌아가기</a>
         <h2>제휴 문의</h2>
         <p class="contact-desc">협업 및 제휴 관련 문의는 아래 양식을 이용해 주세요.</p>
         <form id="contact-form" action="https://formspree.io/f/xpqoplkr" method="POST">
@@ -33,6 +40,7 @@
             <p id="form-status"></p>
         </form>
     </div>
+
     <script src="contact.js"></script>
 </body>
 </html>

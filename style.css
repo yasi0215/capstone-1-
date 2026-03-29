@@ -5,6 +5,7 @@
     --text-color: #333;
     --container-bg: white;
     --bg-pattern-color: #ccc;
+    --navbar-bg: white;
 }
 
 body.dark {
@@ -12,17 +13,20 @@ body.dark {
     --text-color: #e0e0e0;
     --container-bg: #16213e;
     --bg-pattern-color: #0f3460;
+    --navbar-bg: #16213e;
 }
 
 body {
     background-color: var(--background-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    padding: 0;
+    padding-top: 70px;
+    box-sizing: border-box;
     background-image: linear-gradient(45deg, var(--bg-pattern-color) 25%, transparent 25%),
                       linear-gradient(-45deg, var(--bg-pattern-color) 25%, transparent 25%),
                       linear-gradient(45deg, transparent 75%, var(--bg-pattern-color) 75%),
@@ -32,19 +36,57 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-#theme-toggle {
+/* Navbar */
+.navbar {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: var(--container-bg);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: var(--navbar-bg);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 200;
+    transition: background-color 0.3s;
+}
+
+.nav-logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.nav-links {
+    display: flex;
+    gap: 24px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 15px;
+    padding-bottom: 2px;
+    transition: color 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+#theme-toggle {
+    background-color: transparent;
     color: var(--text-color);
     border: 2px solid var(--primary-color);
-    padding: 8px 16px;
-    font-size: 14px;
+    padding: 6px 14px;
+    font-size: 13px;
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s;
-    z-index: 100;
 }
 
 #theme-toggle:hover {
@@ -52,6 +94,7 @@ body {
     color: white;
 }
 
+/* Lotto */
 .container {
     text-align: center;
     background-color: var(--container-bg);
@@ -87,13 +130,4 @@ h1 {
     display: flex;
     justify-content: center;
     margin-top: 30px;
-}
-
-.contact-link {
-    display: inline-block;
-    margin-top: 20px;
-    color: var(--primary-color);
-    font-size: 14px;
-    text-decoration: none;
-    border-bottom: 1px solid var(--primary-color);
 }
