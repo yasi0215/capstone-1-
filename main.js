@@ -1,7 +1,10 @@
 class LottoBall extends HTMLElement {
     constructor() {
         super();
-        const shadow = this.attachShadow({ mode: 'open' });
+        this.attachShadow({ mode: 'open' });
+    }
+
+    connectedCallback() {
         const number = this.getAttribute('number');
         const color = this.getAttribute('color');
 
@@ -21,7 +24,7 @@ class LottoBall extends HTMLElement {
 
         ball.textContent = number;
 
-        shadow.appendChild(ball);
+        this.shadowRoot.appendChild(ball);
     }
 }
 
