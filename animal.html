@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동물상 테스트 - LottoGen</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .animal-container {
+            background-color: var(--container-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .animal-container h1 {
+            font-size: 26px;
+            margin-bottom: 6px;
+            color: var(--text-color);
+        }
+
+        .animal-container .subtitle {
+            color: var(--text-color);
+            opacity: 0.6;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        #webcam-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #webcam-container canvas {
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            width: 260px !important;
+            height: 260px !important;
+        }
+
+        #start-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 36px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        #start-btn:hover {
+            background-color: #FF4747;
+            box-shadow: 0 7px 14px rgba(0,0,0,0.15);
+        }
+
+        #start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-card {
+            display: none;
+            margin-top: 8px;
+            padding: 20px 24px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--primary-color), #FF9A9A);
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            box-shadow: 0 6px 16px rgba(255,107,107,0.4);
+            animation: pop 0.4s ease;
+        }
+
+        .result-card .animal-emoji {
+            font-size: 52px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .result-card .animal-label {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .result-card .confidence {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        #bar-container {
+            margin-top: 16px;
+            text-align: left;
+        }
+
+        .bar-row {
+            margin-bottom: 10px;
+        }
+
+        .bar-label {
+            font-size: 13px;
+            color: var(--text-color);
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar-track {
+            background-color: #e0e0e0;
+            border-radius: 999px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        body.dark .bar-track {
+            background-color: #333;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        .bar-fill.dog { background-color: #FF6B6B; }
+        .bar-fill.cat { background-color: #4ECDC4; }
+
+        .status-msg {
+            font-size: 13px;
+            color: var(--text-color);
+            opacity: 0.5;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <span class="nav-logo">🎱 LottoGen</span>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">홈</a>
+            <a href="animal.html" class="nav-link active">동물상 테스트</a>
+            <a href="contact.html" class="nav-link">제휴 문의</a>
+        </div>
+        <button id="theme-toggle">🌙 Dark Mode</button>
+    </nav>
+
+    <div class="animal-container">
+        <h1>나는 어떤 동물상? 🐾</h1>
+        <p class="subtitle">카메라로 얼굴을 비추면 AI가 동물상을 분석해드려요</p>
+
+        <button id="start-btn" onclick="init()">카메라 시작</button>
+
+        <div id="webcam-container"></div>
+
+        <div class="result-card" id="result-card">
+            <span class="animal-emoji" id="result-emoji"></span>
+            <div class="animal-label" id="result-label"></div>
+            <div class="confidence" id="result-confidence"></div>
+        </div>
+
+        <div id="bar-container" style="display:none">
+            <div class="bar-row" id="bar-dog">
+                <div class="bar-label"><span>🐶 강아지상</span><span id="pct-dog">0%</span></div>
+                <div class="bar-track"><div class="bar-fill dog" id="fill-dog" style="width:0%"></div></div>
+            </div>
+            <div class="bar-row" id="bar-cat">
+                <div class="bar-label"><span>🐱 고양이상</span><span id="pct-cat">0%</span></div>
+                <div class="bar-track"><div class="bar-fill cat" id="fill-cat" style="width:0%"></div></div>
+            </div>
+        </div>
+
+        <p class="status-msg" id="status-msg">버튼을 눌러 카메라 권한을 허용해주세요</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script>
+        const MODEL_URL = "https://teachablemachine.withgoogle.com/models/-atDGHdAa/";
+        let model, webcam, maxPredictions;
+
+        const ANIMALS = {
+            "강아지": { emoji: "🐶", label: "강아지상이에요!", barClass: "dog", fillId: "fill-dog", pctId: "pct-dog" },
+            "고양이": { emoji: "🐱", label: "고양이상이에요!", barClass: "cat", fillId: "fill-cat", pctId: "pct-cat" },
+        };
+
+        async function init() {
+            const btn = document.getElementById('start-btn');
+            btn.disabled = true;
+            btn.textContent = '로딩 중...';
+            document.getElementById('status-msg').textContent = '모델을 불러오는 중입니다...';
+
+            try {
+                model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+                maxPredictions = model.getTotalClasses();
+
+                webcam = new tmImage.Webcam(260, 260, true);
+                await webcam.setup();
+                await webcam.play();
+
+                document.getElementById("webcam-container").appendChild(webcam.canvas);
+                document.getElementById('bar-container').style.display = 'block';
+                document.getElementById('status-msg').textContent = '실시간으로 분석 중...';
+                btn.style.display = 'none';
+
+                window.requestAnimationFrame(loop);
+            } catch (e) {
+                btn.disabled = false;
+                btn.textContent = '카메라 시작';
+                document.getElementById('status-msg').textContent = '카메라 접근에 실패했습니다. 권한을 확인해주세요.';
+            }
+        }
+
+        async function loop() {
+            webcam.update();
+            await predict();
+            window.requestAnimationFrame(loop);
+        }
+
+        async function predict() {
+            const prediction = await model.predict(webcam.canvas);
+
+            let top = prediction.reduce((a, b) => a.probability > b.probability ? a : b);
+            const info = ANIMALS[top.className];
+
+            // 결과 카드
+            const card = document.getElementById('result-card');
+            card.style.display = 'block';
+            document.getElementById('result-emoji').textContent = info ? info.emoji : '🐾';
+            document.getElementById('result-label').textContent = info ? info.label : top.className;
+            document.getElementById('result-confidence').textContent = `확률 ${(top.probability * 100).toFixed(1)}%`;
+
+            // 바 업데이트
+            prediction.forEach(p => {
+                const a = ANIMALS[p.className];
+                if (!a) return;
+                const pct = (p.probability * 100).toFixed(1);
+                document.getElementById(a.fillId).style.width = pct + '%';
+                document.getElementById(a.pctId).textContent = pct + '%';
+            });
+        }
+
+        // 다크모드
+        const toggle = document.getElementById('theme-toggle');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+            toggle.textContent = '☀️ Light Mode';
+        }
+        toggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            toggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>
